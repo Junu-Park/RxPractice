@@ -1,5 +1,5 @@
 //
-//  SimpleTableViewPracticeViewController.swift
+//  SimpleTableViewController.swift
 //  RxPractice
 //
 //  Created by 박준우 on 2/18/25.
@@ -11,7 +11,7 @@ import RxCocoa
 import RxSwift
 import SnapKit
 
-final class SimpleTableViewPracticeViewController: UIViewController {
+final class SimpleTableViewController: UIViewController {
 
     private let tableView: UITableView = UITableView()
     
