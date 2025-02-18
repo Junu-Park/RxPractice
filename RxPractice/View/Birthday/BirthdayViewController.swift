@@ -69,19 +69,44 @@ final class BirthdayViewController: UIViewController {
   
     private let nextButton = PointButton(title: "가입하기")
     
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.view.backgroundColor = .white
-        
+        self.configureView()
         self.configureHierarchy()
         self.configureLayout()
         
         self.nextButton.addTarget(self, action: #selector(nextButtonClicked), for: .touchUpInside)
+        
+        self.birthDayPicker.rx.date
+            .map({ value in
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([.year, .month, .day], from: value)
+                let year = String(components.year ?? 0)
+                let month = String(components.month ?? 0)
+                let day = String(components.day ?? 0)
+                let isOver = (2025 - (components.year ?? 2025) >= 17)
+                return (year, month, day, isOver)
+            })
+            .bind(with: self) { owner, value  in
+                owner.yearLabel.text = "\(value.0)년"
+                owner.monthLabel.text = "\(value.1)월"
+                owner.dayLabel.text = "\(value.2)일"
+                owner.nextButton.isEnabled = value.3
+            }
+            .disposed(by: self.disposeBag)
     }
     
     @objc private func nextButtonClicked() {
         
+    }
+    
+    private func configureView() {
+        self.view.backgroundColor = .white
+        self.nextButton.setTitleColor(.gray, for: .highlighted)
+        self.nextButton.setTitleColor(.white, for: [])
     }
     
     private func configureHierarchy() {
