@@ -68,7 +68,7 @@ final class SimpleTableViewController: UIViewController {
     }
 }
 
-extension SimpleTableViewPracticeViewController {
+extension SimpleTableViewController {
     func presentAlert(message: String) {
         let ac = UIAlertController(title: "Cell Selected", message: message, preferredStyle: .alert)
         let okAction = UIAlertAction(title: "확인", style: .cancel)
