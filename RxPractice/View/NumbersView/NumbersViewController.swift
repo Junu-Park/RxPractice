@@ -20,18 +20,35 @@ final class NumbersViewController: UIViewController {
     private let plusLabel: UILabel = UILabel()
     private let resultLabel: UILabel = UILabel()
     
+    private let disposeBag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.configureView()
         self.configureHierarchy()
-        self.configureHierarchy()
+        self.configureLayout()
         
+        // TODO: zip(제대로 적용 안 됨) vs combineLatest
+        Observable
+            .combineLatest(self.textField1.rx.text.orEmpty, self.textField2.rx.text.orEmpty, self.textField3.rx.text.orEmpty)
+            .map { value1, value2, value3 in
+                let first = Int(value1) ?? 0
+                let second = Int(value2) ?? 0
+                let third = Int(value3) ?? 0
+                let result = first + second + third
+                return String(result)
+            }
+            .withUnretained(self)
+            .bind { owner, value in
+                owner.resultLabel.text = value
+            }
+            .disposed(by: disposeBag)
     }
     
     private func configureView() {
         self.view.backgroundColor = .white
-        self.resultLabel.backgroundColor = .gray
+        self.resultLabel.backgroundColor = .lightGray
         self.plusLabel.text = "+"
         self.plusLabel.textColor = .black
         self.textField1.borderStyle = .roundedRect
